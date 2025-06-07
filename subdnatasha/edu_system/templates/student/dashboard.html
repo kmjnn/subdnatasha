@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Student Dashboard</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">My Group</h5>
+                <h2 class="card-text">{{ current_user.group.name if current_user.group else 'None' }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">Courses</h5>
+                <h2 class="card-text">{{ stats.courses }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">Average Grade</h5>
+                <h2 class="card-text">
+                    {% if stats.avg_grade %}{{ "%.1f"|format(stats.avg_grade) }}{% else %}N/A{% endif %}
+                </h2>
+                <a href="{{ url_for('student_grades') }}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">Upcoming Classes</h3>
+<div class="card">
+    <div class="card-body">
+        {% if not current_user.group %}
+        <div class="alert alert-warning">You are not assigned to any group.</div>
+        {% else %}
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Course</th>
+                        <th>Teacher</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schedule in Schedule.query.join(Course)
+                        .filter(Course.group_id==current_user.group_id)
+                        .filter(Schedule.start_time >= datetime.now())
+                        .order_by(Schedule.start_time).limit(5).all() %}
+                    <tr>
+                        <td>{{ schedule.start_time.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ schedule.start_time.strftime('%H:%M') }} - {{ schedule.end_time.strftime('%H:%M') }}</td>
+                        <td>{{ schedule.course.discipline }}</td>
+                        <td>{{ schedule.course.teacher.full_name }}</td>
+                        <td>{{ schedule.course.location or '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">No upcoming classes</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

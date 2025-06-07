@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Add Schedule{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Add New Schedule</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('admin_schedules') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Schedules
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.course_id.label(class="form-label") }}
+                {{ form.course_id(class="form-select") }}
+                {% if form.course_id.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.course_id.errors[0] }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.start_time.label(class="form-label") }}
+                    {{ form.start_time(class="form-control") }}
+                    {% if form.start_time.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.start_time.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.end_time.label(class="form-label") }}
+                    {{ form.end_time(class="form-control") }}
+                    {% if form.end_time.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.end_time.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add Schedule</button>
+        </form>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    // Инициализация datetime picker
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#start_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true
+        });
+        flatpickr("#end_time", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

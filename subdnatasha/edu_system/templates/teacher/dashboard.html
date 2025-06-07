@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Teacher Dashboard</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">My Courses</h5>
+                <h2 class="card-text">{{ stats.courses }}</h2>
+                <a href="{{ url_for('teacher_courses') }}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">Students</h5>
+                <h2 class="card-text">{{ stats.students }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title">Grades Given</h5>
+                <h2 class="card-text">{{ Grade.query.join(Course).filter(Course.teacher_id==current_user.id).count() }}</h2>
+                <a href="{{ url_for('teacher_grades') }}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">Upcoming Classes</h3>
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Course</th>
+                        <th>Group</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schedule in Schedule.query.join(Course)
+                        .filter(Course.teacher_id==current_user.id)
+                        .filter(Schedule.start_time >= datetime.now())
+                        .order_by(Schedule.start_time).limit(5).all() %}
+                    <tr>
+                        <td>{{ schedule.start_time.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ schedule.start_time.strftime('%H:%M') }} - {{ schedule.end_time.strftime('%H:%M') }}</td>
+                        <td>{{ schedule.course.discipline }}</td>
+                        <td>{{ schedule.course.group.name }}</td>
+                        <td>{{ schedule.course.location or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

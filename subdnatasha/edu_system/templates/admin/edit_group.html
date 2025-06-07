@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Group{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Edit Group: {{ group.name }}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('admin_groups') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Groups
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+                {% if form.name.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.name.errors[0] }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Students Count</label>
+                <input type="text" class="form-control" value="{{ group.student_count }}" readonly>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Group</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

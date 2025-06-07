@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Add Course{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Add New Course</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('admin_courses') }}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Courses
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.discipline.label(class="form-label") }}
+                {{ form.discipline(class="form-control") }}
+                {% if form.discipline.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.discipline.errors[0] }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.group_id.label(class="form-label") }}
+                    {{ form.group_id(class="form-select") }}
+                    {% if form.group_id.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.group_id.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.teacher_id.label(class="form-label") }}
+                    {{ form.teacher_id(class="form-select") }}
+                    {% if form.teacher_id.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.teacher_id.errors[0] }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.location.label(class="form-label") }}
+                {{ form.location(class="form-control") }}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add Course</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
