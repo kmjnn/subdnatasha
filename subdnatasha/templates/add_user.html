@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить пользователя{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-person-plus"></i> Добавить пользователя</h1>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Имя пользователя*</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email*</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Пароль*</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">ФИО*</label>
+                    <input type="text" class="form-control" name="full_name" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Роль*</label>
+                    <select class="form-select" name="role" required>
+                        <option value="admin">Администратор</option>
+                        <option value="teacher">Преподаватель</option>
+                        <option value="student" selected>Студент</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Группа (для студентов)</label>
+                    <select class="form-select" name="group_id">
+                        <option value="">-- Выберите группу --</option>
+                        {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary me-md-2">Отмена</a>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

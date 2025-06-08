@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель студента{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-speedometer2"></i> Панель студента</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-person-circle"></i> Мои данные</h5>
+                <p><strong>ФИО:</strong> {{ student.full_name }}</p>
+                <p><strong>Группа:</strong> {{ student.group.name if student.group else 'Не назначена' }}</p>
+                <p><strong>Инструмент:</strong> {{ student.specialization or 'Не указан' }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-book"></i> Статистика</h5>
+                <p><strong>Курсов:</strong> {{ courses|length }}</p>
+                <p><strong>Средний балл:</strong> 
+                    {% if grades %}
+                        {{ (grades|sum(attribute='grade') / grades|length)|round(2) }}
+                    {% else %}
+                        Нет оценок
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3"><i class="bi bi-journal-bookmark"></i> Мои курсы</h3>
+<div class="row">
+    {% for course in courses %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.discipline }}</h5>
+                <p class="card-text">
+                    <span class="badge bg-primary">{{ course.teacher.full_name }}</span>
+                </p>
+                <p class="card-text"><small class="text-muted">{{ course.location or 'Место не указано' }}</small></p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info">У вас пока нет курсов</div>
+    </div>
+    {% endfor %}
+</div>
+
+<h3 class="mb-3"><i class="bi bi-star"></i> Мои оценки</h3>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Дисциплина</th>
+                <th>Оценка</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+            <tr>
+                <td>{{ grade.course.discipline }}</td>
+                <td>
+                    <span class="badge bg-{% if grade.grade >= 4 %}success{% else %}warning text-dark{% endif %}">
+                        {{ grade.grade }}
+                    </span>
+                </td>
+                <td>{{ grade.date.strftime('%d.%m.%Y') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" class="text-center py-4">
+                    <div class="alert alert-info mb-0">У вас пока нет оценок</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

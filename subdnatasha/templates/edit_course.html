@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать курс{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-journal-text"></i> Редактировать курс</h1>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="discipline" class="form-label">Название дисциплины*</label>
+                <input type="text" class="form-control" id="discipline" name="discipline" value="{{ course.discipline }}" required>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="group_id" class="form-label">Группа*</label>
+                    <select class="form-select" id="group_id" name="group_id" required>
+                        {% for group in groups %}
+                        <option value="{{ group.id }}" {% if group.id == course.group_id %}selected{% endif %}>{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="location" class="form-label">Место проведения</label>
+                    <input type="text" class="form-control" id="location" name="location" value="{{ course.location or '' }}">
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{ url_for('teacher_courses') }}" class="btn btn-secondary me-md-2">Отмена</a>
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

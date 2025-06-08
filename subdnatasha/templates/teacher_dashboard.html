@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель преподавателя{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="bi bi-speedometer2"></i> Панель преподавателя</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0"><i class="bi bi-info-circle"></i> Информация</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>ФИО:</strong> {{ current_user.full_name }}</p>
+                <p><strong>Специализация:</strong> {{ current_user.specialization or 'Не указана' }}</p>
+                <p><strong>Количество курсов:</strong> {{ courses|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0"><i class="bi bi-bell"></i> Последние события</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Новых сообщений: 0</li>
+                    <li class="list-group-item">Предстоящих занятий: 2</li>
+                    <li class="list-group-item">Ожидает проверки: 3 работы</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3"><i class="bi bi-journal-bookmark"></i> Последние курсы</h3>
+<div class="row">
+    {% for course in courses[:3] %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ course.discipline }}</h5>
+                <p class="card-text">
+                    <span class="badge bg-secondary">{{ course.group.name }}</span>
+                </p>
+                <p class="card-text"><small class="text-muted">{{ course.location or 'Место не указано' }}</small></p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{{ url_for('teacher_course', course_id=course.id) }}" class="btn btn-sm btn-outline-primary">Перейти</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info">У вас пока нет курсов</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
